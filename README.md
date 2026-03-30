@@ -2,7 +2,7 @@
 
 A minimal, browser-based content calendar for creators. Plan 12 months of daily content with scripts, hooks, captions, and more — all saved locally in your browser.
 
-**Live demo:** [content-planner-template.vercel.app](https://content-planner-template.vercel.app/)
+**Live demo:** [content-calendar.vercel.app](https://content-calendar.vercel.app/)
 
 ## Features
 
@@ -21,7 +21,7 @@ A minimal, browser-based content calendar for creators. Plan 12 months of daily 
 
 ### Use it now
 
-Visit [content-planner-template.vercel.app](https://content-planner-template.vercel.app/) — no signup, no install.
+Visit [content-planner-template.vercel.app](https://content-calendar.vercel.app/) — no signup, no install.
 
 ### Run locally
 
