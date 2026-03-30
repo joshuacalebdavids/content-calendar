@@ -1,8 +1,15 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 
 /* ─── Version & Changelog ─── */
-const APP_VERSION = "1.3.0";
+const APP_VERSION = "1.4.0";
 const CHANGELOG = [
+  {
+    version: "1.4.0",
+    date: "2026-03-30",
+    changes: [
+      "Added 'Post' as a new format option alongside Reel and Carousel",
+    ],
+  },
   {
     version: "1.3.0",
     date: "2026-03-10",
@@ -48,7 +55,7 @@ const CHANGELOG = [
 /* ─── Default Brand Settings ─── */
 const DEFAULT_BRAND = {
   name: "Vorteks Digital",
-  subtitle: "Content Planner · Reels + Carousels",
+  subtitle: "Content Planner · Reels + Carousels + Posts",
   months: [
     "Month 1",
     "Month 2",
@@ -94,6 +101,9 @@ const DY_FULL = {
   Thu: "Thursday",
   Fri: "Friday",
 };
+
+/* ─── Format options ─── */
+const FORMATS = ["Reel", "Carousel", "Post"];
 
 /* ─── Theme Palettes ─── */
 const THEMES = {
@@ -184,11 +194,10 @@ const EMPTY = (d) => ({
 });
 const BLANK_WEEK = () => DY.map((d) => EMPTY(d));
 
-/* ─── Build initial data: Mon W1 has example, everything else blank ─── */
+/* ─── Build initial data ─── */
 const buildInitialData = () => {
   const weeks = [];
   for (let i = 0; i < 48; i++) weeks.push(BLANK_WEEK());
-  // Week 1 Monday: example content
   weeks[0][0] = {
     d: "Mon",
     t: "Example: Your Monday Topic",
@@ -202,6 +211,13 @@ const buildInitialData = () => {
     tg: "#yourbrand #content #monday",
   };
   return weeks;
+};
+
+/* ─── Format colour chips ─── */
+const FORMAT_COLORS = {
+  Reel: { bg: "#ff6b6b22", text: "#ff6b6b" },
+  Carousel: { bg: "#60aaff22", text: "#60aaff" },
+  Post: { bg: "#4cdd8022", text: "#4cdd80" },
 };
 
 /* ─── Editable Field ─── */
@@ -259,6 +275,38 @@ function EditField({
       style={{ ...baseStyle, lineHeight: style?.lineHeight || 1.75 }}
       {...handlers}
     />
+  );
+}
+
+/* ─── Format Select ─── */
+function FormatSelect({ value, onChange, T }) {
+  const fc = FORMAT_COLORS[value] || { bg: "transparent", text: T.textMuted };
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      style={{
+        display: "inline-block",
+        background: fc.bg,
+        color: fc.text,
+        padding: "4px 12px",
+        borderRadius: "3px",
+        fontSize: "0.64rem",
+        fontWeight: 600,
+        letterSpacing: "2px",
+        textTransform: "uppercase",
+        border: `1px solid ${fc.text}55`,
+        fontFamily: "Inter",
+        outline: "none",
+        cursor: "pointer",
+      }}
+    >
+      {FORMATS.map((f) => (
+        <option key={f} value={f}>
+          {f}
+        </option>
+      ))}
+    </select>
   );
 }
 
@@ -347,7 +395,6 @@ function SettingsModal({ brand, onSave, onClose, T, mobile }) {
           marginBottom: "40px",
         }}
       >
-        {/* Close */}
         <button
           onClick={onClose}
           style={{
@@ -367,7 +414,6 @@ function SettingsModal({ brand, onSave, onClose, T, mobile }) {
         >
           ESC
         </button>
-
         <h2
           style={{
             fontSize: "1rem",
@@ -381,7 +427,6 @@ function SettingsModal({ brand, onSave, onClose, T, mobile }) {
           Brand Settings
         </h2>
 
-        {/* Brand Identity */}
         <div style={sectionStyle}>
           <div style={sectionTitle}>Identity</div>
           <div style={{ marginBottom: "12px" }}>
@@ -402,7 +447,6 @@ function SettingsModal({ brand, onSave, onClose, T, mobile }) {
           </div>
         </div>
 
-        {/* Month Names */}
         <div style={sectionStyle}>
           <div style={sectionTitle}>Month Names</div>
           <div
@@ -421,7 +465,6 @@ function SettingsModal({ brand, onSave, onClose, T, mobile }) {
                   onChange={(e) => {
                     const months = [...draft.months];
                     months[i] = e.target.value;
-                    upd("months", "");
                     setDraft((prev) => ({ ...prev, months }));
                   }}
                 />
@@ -430,7 +473,6 @@ function SettingsModal({ brand, onSave, onClose, T, mobile }) {
           </div>
         </div>
 
-        {/* Day Configuration */}
         <div style={sectionStyle}>
           <div style={sectionTitle}>Day Configuration</div>
           {DY.map((d) => (
@@ -510,7 +552,6 @@ function SettingsModal({ brand, onSave, onClose, T, mobile }) {
           ))}
         </div>
 
-        {/* Save */}
         <div
           style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}
         >
@@ -608,6 +649,13 @@ function BriefModal({
   );
 
   const fieldBase = { color: T.textSoft, fontFamily: "'Inter', sans-serif" };
+  const stC2 = {
+    Idea: "#f0c040",
+    Drafting: "#60aaff",
+    Ready: "#d070ff",
+    Posted: "#4cdd80",
+  };
+  const st = sts[key];
 
   return (
     <div
@@ -642,7 +690,6 @@ function BriefModal({
           marginBottom: "40px",
         }}
       >
-        {/* Close button */}
         <button
           onClick={onClose}
           style={{
@@ -696,28 +743,8 @@ function BriefModal({
           >
             {item.d} · {SN[item.d]}
           </span>
-          <select
-            value={get("f")}
-            onChange={(e) => set("f")(e.target.value)}
-            style={{
-              display: "inline-block",
-              background: T.card,
-              color: T.textMuted,
-              padding: "4px 12px",
-              borderRadius: "3px",
-              fontSize: "0.64rem",
-              fontWeight: 500,
-              letterSpacing: "2px",
-              textTransform: "uppercase",
-              border: `1px solid ${T.border}`,
-              fontFamily: "Inter",
-              outline: "none",
-              cursor: "pointer",
-            }}
-          >
-            <option value="Reel">Reel</option>
-            <option value="Carousel">Carousel</option>
-          </select>
+          {/* Format selector with colour coding */}
+          <FormatSelect value={get("f")} onChange={set("f")} T={T} />
           <span
             style={{
               display: "inline-block",
@@ -733,45 +760,33 @@ function BriefModal({
           >
             {PIL[item.d]}
           </span>
-          {(() => {
-            const stC2 = {
-              Idea: "#f0c040",
-              Drafting: "#60aaff",
-              Ready: "#d070ff",
-              Posted: "#4cdd80",
-            };
-            const st = sts[key];
-            return (
-              <select
-                value={st || ""}
-                onChange={(e) => onStatus(key, e.target.value)}
-                style={{
-                  display: "inline-block",
-                  background: T.card,
-                  color: st ? stC2[st] : T.textMuted,
-                  padding: "4px 12px",
-                  borderRadius: "3px",
-                  fontSize: "0.64rem",
-                  fontWeight: 500,
-                  letterSpacing: "2px",
-                  textTransform: "uppercase",
-                  border: `1px solid ${st ? stC2[st] + "66" : T.border}`,
-                  fontFamily: "Inter",
-                  outline: "none",
-                  cursor: "pointer",
-                }}
-              >
-                <option value="">Status</option>
-                <option value="Idea">Idea</option>
-                <option value="Drafting">Drafting</option>
-                <option value="Ready">Ready</option>
-                <option value="Posted">Posted</option>
-              </select>
-            );
-          })()}
+          <select
+            value={st || ""}
+            onChange={(e) => onStatus(key, e.target.value)}
+            style={{
+              display: "inline-block",
+              background: T.card,
+              color: st ? stC2[st] : T.textMuted,
+              padding: "4px 12px",
+              borderRadius: "3px",
+              fontSize: "0.64rem",
+              fontWeight: 500,
+              letterSpacing: "2px",
+              textTransform: "uppercase",
+              border: `1px solid ${st ? stC2[st] + "66" : T.border}`,
+              fontFamily: "Inter",
+              outline: "none",
+              cursor: "pointer",
+            }}
+          >
+            <option value="">Status</option>
+            <option value="Idea">Idea</option>
+            <option value="Drafting">Drafting</option>
+            <option value="Ready">Ready</option>
+            <option value="Posted">Posted</option>
+          </select>
         </div>
 
-        {/* Meta */}
         <div
           style={{
             color: T.textDim,
@@ -784,7 +799,6 @@ function BriefModal({
           {brand.name} · Month {mo + 1}: {MN[mo]} · Week {tw}
         </div>
 
-        {/* Title */}
         <EditField
           value={get("t")}
           onChange={set("t")}
@@ -801,8 +815,6 @@ function BriefModal({
             marginBottom: "4px",
           }}
         />
-
-        {/* Principle */}
         <EditField
           value={get("p")}
           onChange={set("p")}
@@ -820,7 +832,6 @@ function BriefModal({
           }}
         />
 
-        {/* Hook */}
         <Section label="Hook (0-2 sec)" />
         <div style={{ borderLeft: `3px solid ${c}`, paddingLeft: "14px" }}>
           <EditField
@@ -840,7 +851,6 @@ function BriefModal({
           />
         </div>
 
-        {/* Script */}
         <Section label="Script" />
         <EditField
           value={get("sc")}
@@ -856,7 +866,6 @@ function BriefModal({
           }}
         />
 
-        {/* Delivery Notes */}
         <Section label="Delivery Notes" />
         <div
           style={{
@@ -881,7 +890,6 @@ function BriefModal({
           />
         </div>
 
-        {/* B-Roll */}
         <Section label="B-Roll Checklist" />
         <EditField
           value={get("br")}
@@ -897,7 +905,6 @@ function BriefModal({
           }}
         />
 
-        {/* Caption */}
         <Section label="Caption (Instagram)" />
         <EditField
           value={get("ca")}
@@ -913,7 +920,6 @@ function BriefModal({
           }}
         />
 
-        {/* Tags */}
         <div
           style={{
             marginTop: "24px",
@@ -937,7 +943,6 @@ function BriefModal({
           />
         </div>
 
-        {/* Footer */}
         <div
           style={{
             marginTop: "28px",
@@ -1027,7 +1032,6 @@ function WhatsNewModal({ onClose, T }) {
         >
           v{APP_VERSION}
         </p>
-
         {(newEntries.length > 0 ? newEntries : CHANGELOG.slice(0, 1)).map(
           (entry) => (
             <div key={entry.version} style={{ marginBottom: "20px" }}>
@@ -1062,7 +1066,6 @@ function WhatsNewModal({ onClose, T }) {
             </div>
           ),
         )}
-
         <button
           onClick={() => {
             localStorage.setItem("cp-version", APP_VERSION);
@@ -1088,6 +1091,27 @@ function WhatsNewModal({ onClose, T }) {
         </button>
       </div>
     </div>
+  );
+}
+
+/* ─── Format badge (read-only chip on cards) ─── */
+function FormatBadge({ value }) {
+  const fc = FORMAT_COLORS[value] || { bg: "transparent", text: "#888" };
+  return (
+    <span
+      style={{
+        fontSize: "0.56rem",
+        color: fc.text,
+        background: fc.bg,
+        padding: "1px 5px",
+        borderRadius: "2px",
+        letterSpacing: "1px",
+        textTransform: "uppercase",
+        fontWeight: 600,
+      }}
+    >
+      {value}
+    </span>
   );
 }
 
@@ -1182,7 +1206,6 @@ export default function P() {
   const mobile = winW < 640;
   const tablet = winW >= 640 && winW < 1024;
 
-  // Derive colors/config from brand
   const SC = brand.dayColors;
   const SN = brand.daySeries;
   const PIL = brand.pillars;
@@ -1203,7 +1226,6 @@ export default function P() {
   };
   const sk = (d) => `${wi}-${d}`;
 
-  // Persist to localStorage
   useEffect(() => {
     localStorage.setItem("cp-theme", theme);
   }, [theme]);
@@ -1235,18 +1257,15 @@ export default function P() {
   const openDoc = useCallback((item) => {
     setModalItem(item);
   }, []);
-
   const closeModal = useCallback(() => {
     setModalItem(null);
   }, []);
-
   const handleEdit = useCallback((key, field, value) => {
     setEdits((prev) => ({
       ...prev,
       [key]: { ...(prev[key] || {}), [field]: value },
     }));
   }, []);
-
   const getEdited = useCallback(
     (item, field) => {
       const key = `${wi}-${item.d}`;
@@ -1254,7 +1273,6 @@ export default function P() {
     },
     [wi, edits],
   );
-
   const isMatch = useCallback(
     (d) => {
       if (!ap) return true;
@@ -1271,23 +1289,19 @@ export default function P() {
       e.dataTransfer.setData("text/plain", "");
     } catch {}
   }, []);
-
   const handleDragEnd = useCallback(() => {
     dragRef.current = null;
     setDragOver(null);
   }, []);
-
   const handleDragOver = useCallback((weekIdx, day, e) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
     const key = `${weekIdx}-${day}`;
     setDragOver((prev) => (prev === key ? prev : key));
   }, []);
-
   const handleDragLeave = useCallback(() => {
     setDragOver(null);
   }, []);
-
   const handleDrop = useCallback((targetWeekIdx, targetDay, e) => {
     e.preventDefault();
     setDragOver(null);
@@ -1295,17 +1309,14 @@ export default function P() {
     const { weekIdx: srcWeekIdx, day: srcDay } = dragRef.current;
     dragRef.current = null;
     if (srcWeekIdx === targetWeekIdx && srcDay === targetDay) return;
-
     setAllData((prev) => {
       const next = prev.map((w) => w.map((i) => ({ ...i })));
       const srcWeek = next[srcWeekIdx];
       const tgtWeek = next[targetWeekIdx];
       const srcIdx = srcWeek.findIndex((x) => x.d === srcDay);
       const tgtIdx = tgtWeek.findIndex((x) => x.d === targetDay);
-
       if (srcIdx === -1) return prev;
       const srcItem = { ...srcWeek[srcIdx], d: targetDay };
-
       if (tgtIdx !== -1) {
         const tgtItem = { ...tgtWeek[tgtIdx], d: srcDay };
         srcWeek[srcIdx] = tgtItem;
@@ -1314,8 +1325,6 @@ export default function P() {
         srcWeek.splice(srcIdx, 1);
         tgtWeek.push(srcItem);
       }
-
-      // move edits
       const srcKey = `${srcWeekIdx}-${srcDay}`;
       const tgtKey = `${targetWeekIdx}-${targetDay}`;
       setEdits((pe) => {
@@ -1328,8 +1337,6 @@ export default function P() {
         if (tgtE) ne[srcKey] = tgtE;
         return ne;
       });
-
-      // move statuses
       setSts((ps) => {
         const ns = { ...ps };
         const srcS = ns[srcKey];
@@ -1340,7 +1347,6 @@ export default function P() {
         if (tgtS) ns[srcKey] = tgtS;
         return ns;
       });
-
       return next;
     });
   }, []);
@@ -1390,7 +1396,6 @@ export default function P() {
     input.click();
   }, []);
 
-  /* ─── Button base ─── */
   const bs = {
     borderRadius: "3px",
     fontSize: "0.72rem",
@@ -1415,12 +1420,9 @@ export default function P() {
         flexDirection: "column",
       }}
     >
-      {/* What's New Modal */}
       {showWhatsNew && (
         <WhatsNewModal onClose={() => setShowWhatsNew(false)} T={T} />
       )}
-
-      {/* Settings Modal */}
       {showSettings && (
         <SettingsModal
           brand={brand}
@@ -1430,8 +1432,6 @@ export default function P() {
           mobile={mobile}
         />
       )}
-
-      {/* Brief Modal */}
       {modalItem && (
         <BriefModal
           item={modalItem}
@@ -1505,7 +1505,7 @@ export default function P() {
               e.currentTarget.style.borderColor = T.border;
             }}
           >
-            {theme === "dark" ? "\u2600\uFE0F Light" : "\uD83C\uDF19 Dark"}
+            {theme === "dark" ? "☀️ Light" : "🌙 Dark"}
           </button>
           <button
             onClick={() => setShowSettings(true)}
@@ -1582,6 +1582,50 @@ export default function P() {
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Format legend */}
+      <div
+        style={{
+          display: "flex",
+          gap: "6px",
+          marginBottom: "10px",
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
+        <span
+          style={{
+            fontSize: "0.62rem",
+            color: T.textVeryDim,
+            letterSpacing: "2px",
+            textTransform: "uppercase",
+            marginRight: "2px",
+          }}
+        >
+          FORMAT
+        </span>
+        {FORMATS.map((f) => {
+          const fc = FORMAT_COLORS[f];
+          return (
+            <span
+              key={f}
+              style={{
+                fontSize: "0.62rem",
+                color: fc.text,
+                background: fc.bg,
+                padding: "3px 10px",
+                borderRadius: "3px",
+                letterSpacing: "1.5px",
+                textTransform: "uppercase",
+                fontWeight: 600,
+                border: `1px solid ${fc.text}33`,
+              }}
+            >
+              {f}
+            </span>
+          );
+        })}
       </div>
 
       {/* Pillar Filters */}
@@ -1704,9 +1748,13 @@ export default function P() {
           const item = data.find((x) => x.d === dy);
           const st = sts[sk(dy)];
           const c = SC[dy];
+          const fmtVal = edits[`${wi}-${dy}`]?.f ?? (item?.f || "Reel");
+          const fc = FORMAT_COLORS[fmtVal] || {
+            bg: "transparent",
+            text: T.textMuted,
+          };
           return (
             <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-              {/* Day tabs */}
               <div
                 style={{
                   display: "flex",
@@ -1731,8 +1779,6 @@ export default function P() {
                   </button>
                 ))}
               </div>
-
-              {/* Day card */}
               <div
                 onClick={() => item && openDoc(item)}
                 style={{
@@ -1747,7 +1793,6 @@ export default function P() {
                   transition: "all 0.15s",
                 }}
               >
-                {/* Header */}
                 <div
                   style={{
                     display: "flex",
@@ -1789,19 +1834,21 @@ export default function P() {
                     >
                       {PIL[dy]}
                     </span>
+                    {/* Coloured format chip */}
                     <span
                       style={{
-                        background: T.card,
-                        color: T.textMuted,
+                        background: fc.bg,
+                        color: fc.text,
                         padding: "4px 10px",
                         borderRadius: "3px",
                         fontSize: "0.64rem",
                         letterSpacing: "1.5px",
                         textTransform: "uppercase",
-                        border: `1px solid ${T.border}`,
+                        border: `1px solid ${fc.text}44`,
+                        fontWeight: 600,
                       }}
                     >
-                      {edits[`${wi}-${dy}`]?.f ?? (item?.f || "Reel")}
+                      {fmtVal}
                     </span>
                   </div>
                   {(() => {
@@ -1843,8 +1890,6 @@ export default function P() {
                     );
                   })()}
                 </div>
-
-                {/* Content */}
                 <div style={{ flex: 1 }}>
                   <div
                     style={{
@@ -1905,8 +1950,6 @@ export default function P() {
                     </div>
                   )}
                 </div>
-
-                {/* Footer hint */}
                 <div
                   style={{
                     fontSize: "0.6rem",
@@ -1921,8 +1964,6 @@ export default function P() {
                   Click to open full brief · {brand.name} · {MN[mo]} · Week {tw}
                 </div>
               </div>
-
-              {/* Disclaimer */}
               <p
                 style={{
                   fontSize: "0.6rem",
@@ -1943,7 +1984,6 @@ export default function P() {
       {/* WEEK VIEW */}
       {vw === "week" && (
         <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-          {/* Legend */}
           <div
             style={{
               display: "flex",
@@ -1956,6 +1996,8 @@ export default function P() {
           >
             {DY.map((d) => {
               const item = data.find((x) => x.d === d);
+              const fv = edits[`${wi}-${d}`]?.f ?? (item?.f || "—");
+              const fc = FORMAT_COLORS[fv] || { text: T.textDim };
               return (
                 <div
                   key={d}
@@ -1972,14 +2014,19 @@ export default function P() {
                 >
                   <span style={{ fontWeight: 600 }}>{DY_FULL[d]}</span> ·{" "}
                   {SN[d]}{" "}
-                  <span style={{ color: T.textDim, fontSize: "0.64rem" }}>
-                    ({edits[`${wi}-${d}`]?.f ?? (item?.f || "—")})
+                  <span
+                    style={{
+                      color: fc.text,
+                      fontSize: "0.64rem",
+                      fontWeight: 600,
+                    }}
+                  >
+                    ({fv})
                   </span>
                 </div>
               );
             })}
           </div>
-
           <p
             style={{
               fontSize: "0.66rem",
@@ -1991,8 +2038,6 @@ export default function P() {
           >
             Drag cards to rearrange · Click to open brief
           </p>
-
-          {/* Grid */}
           <div
             style={{
               display: "grid",
@@ -2054,6 +2099,11 @@ export default function P() {
                 );
               const st = sts[sk(d)];
               const match = isMatch(d);
+              const fv = getEdited(item, "f");
+              const fc = FORMAT_COLORS[fv] || {
+                bg: "transparent",
+                text: T.textDim,
+              };
               return (
                 <div
                   key={`c-${d}`}
@@ -2105,18 +2155,42 @@ export default function P() {
                       marginBottom: "2px",
                     }}
                   >
-                    <span
+                    <div
                       style={{
-                        fontSize: "0.56rem",
-                        color: SC[d],
-                        letterSpacing: "1px",
-                        textTransform: "uppercase",
-                        opacity: 0.8,
+                        display: "flex",
+                        gap: "4px",
+                        alignItems: "center",
                       }}
                     >
-                      {mobile || tablet ? `${DY_FULL[d]} · ` : ""}
-                      {getEdited(item, "f")}
-                    </span>
+                      {(mobile || tablet) && (
+                        <span
+                          style={{
+                            fontSize: "0.54rem",
+                            color: SC[d],
+                            letterSpacing: "1px",
+                            textTransform: "uppercase",
+                            opacity: 0.8,
+                          }}
+                        >
+                          {DY_FULL[d]} ·
+                        </span>
+                      )}
+                      {/* Coloured format badge */}
+                      <span
+                        style={{
+                          fontSize: "0.54rem",
+                          color: fc.text,
+                          background: fc.bg,
+                          padding: "1px 5px",
+                          borderRadius: "2px",
+                          letterSpacing: "1px",
+                          textTransform: "uppercase",
+                          fontWeight: 600,
+                        }}
+                      >
+                        {fv}
+                      </span>
+                    </div>
                     {st ? (
                       <span
                         style={{
@@ -2194,8 +2268,6 @@ export default function P() {
               );
             })}
           </div>
-
-          {/* Disclaimer */}
           <p
             style={{
               fontSize: "0.6rem",
@@ -2324,6 +2396,12 @@ export default function P() {
                           }}
                         />
                       );
+                    const ovSt = sts[`${gi}-${d}`];
+                    const fv = edits[`${gi}-${d}`]?.f ?? item.f;
+                    const fc = FORMAT_COLORS[fv] || {
+                      bg: "transparent",
+                      text: T.textDim,
+                    };
                     return (
                       <div
                         key={`${w}-${d}`}
@@ -2372,46 +2450,67 @@ export default function P() {
                             marginBottom: "2px",
                           }}
                         >
-                          <span
+                          <div
                             style={{
-                              fontSize: "0.56rem",
-                              color: SC[d],
-                              letterSpacing: "1px",
-                              textTransform: "uppercase",
-                              opacity: 0.8,
+                              display: "flex",
+                              gap: "3px",
+                              alignItems: "center",
                             }}
                           >
-                            {mobile ? `${DY_FULL[d]} · ` : ""}
-                            {edits[`${gi}-${d}`]?.f ?? item.f}
-                          </span>
-                          {(() => {
-                            const ovSt = sts[`${gi}-${d}`];
-                            return ovSt ? (
+                            {mobile && (
                               <span
                                 style={{
-                                  fontSize: "0.46rem",
-                                  color: stC[ovSt],
+                                  fontSize: "0.54rem",
+                                  color: SC[d],
                                   letterSpacing: "1px",
                                   textTransform: "uppercase",
-                                  fontWeight: 600,
-                                  background: stC[ovSt] + "18",
-                                  padding: "1px 4px",
-                                  borderRadius: "2px",
+                                  opacity: 0.8,
                                 }}
                               >
-                                {ovSt}
+                                {DY_FULL[d]} ·
                               </span>
-                            ) : (
-                              <div
-                                style={{
-                                  width: "3px",
-                                  height: "3px",
-                                  borderRadius: "50%",
-                                  background: T.textFaint,
-                                }}
-                              />
-                            );
-                          })()}
+                            )}
+                            {/* Coloured format badge */}
+                            <span
+                              style={{
+                                fontSize: "0.5rem",
+                                color: fc.text,
+                                background: fc.bg,
+                                padding: "1px 4px",
+                                borderRadius: "2px",
+                                letterSpacing: "0.8px",
+                                textTransform: "uppercase",
+                                fontWeight: 600,
+                              }}
+                            >
+                              {fv}
+                            </span>
+                          </div>
+                          {ovSt ? (
+                            <span
+                              style={{
+                                fontSize: "0.46rem",
+                                color: stC[ovSt],
+                                letterSpacing: "1px",
+                                textTransform: "uppercase",
+                                fontWeight: 600,
+                                background: stC[ovSt] + "18",
+                                padding: "1px 4px",
+                                borderRadius: "2px",
+                              }}
+                            >
+                              {ovSt}
+                            </span>
+                          ) : (
+                            <div
+                              style={{
+                                width: "3px",
+                                height: "3px",
+                                borderRadius: "50%",
+                                background: T.textFaint,
+                              }}
+                            />
+                          )}
                         </div>
                         <div
                           style={{
