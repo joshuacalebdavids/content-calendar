@@ -54,7 +54,7 @@ const CHANGELOG = [
 
 /* ─── Default Brand Settings ─── */
 const DEFAULT_BRAND = {
-  name: "Vorteks Digital",
+  name: "VRTKS Calio",
   subtitle: "Content Planner · Reels + Carousels + Posts",
   months: [
     "Month 1",
