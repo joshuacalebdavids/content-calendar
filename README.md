@@ -1,6 +1,6 @@
-# Content Planner
+# VRTKS Calio
 
-A minimal, browser-based content calendar for creators. Plan 12 months of daily content with scripts, hooks, captions, and more — all saved locally in your browser.
+A minimal, browser-based content planner for creators. Plan 12 months of daily content with scripts, hooks, captions, and more — all saved locally in your browser.
 
 **Live demo:** [content-calendar-pearl.vercel.app](https://content-calendar-pearl.vercel.app/)
 
@@ -15,7 +15,7 @@ A minimal, browser-based content calendar for creators. Plan 12 months of daily 
 - **Drag and drop** — Rearrange content between days and weeks
 - **Export / Import** — JSON backup files for your data
 - **Responsive** — Works on mobile, tablet, and desktop
-- **Privacy first** — All data stays in your browser (localStorage). Nothing is sent to a server.
+- **Privacy first** — All data stays in your browser using localStorage. Nothing is sent to a server.
 
 ## Getting Started
 
@@ -26,8 +26,8 @@ Visit [content-calendar-pearl.vercel.app](https://content-calendar-pearl.vercel.
 ### Run locally
 
 ```bash
-git clone https://github.com/aeglivh/content-planner-template.git
-cd content-planner-template
+git clone https://github.com/joshuacalebdavids/vrtks-calio.git
+cd vrtks-calio
 npm install
 npm run dev
 ```
@@ -36,7 +36,7 @@ npm run dev
 
 Click the button below to deploy your own instance to Vercel:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/aeglivh/content-planner-template)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/joshuacalebdavids/content-calendar)
 
 ## Tech Stack
 
