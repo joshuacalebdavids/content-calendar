@@ -13,12 +13,14 @@ import {
   MagnifyingGlass,
   Plus,
   Sparkle,
+  SignIn,
   SignOut,
 } from "@phosphor-icons/react";
 import {
   CircleHelp,
   FileText,
   LayoutDashboard,
+  LogIn,
   LogOut,
   Settings,
   TrendingUp,
@@ -95,8 +97,8 @@ export function Planner() {
   const [isSigningOut, setIsSigningOut] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
 
-  const userName = session?.user.name || "Calio member";
-  const userEmail = session?.user.email || "Secure workspace";
+  const userName = session?.user.name || "Demo visitor";
+  const userEmail = session?.user.email || "Local demo workspace";
   const userInitials = userName
     .split(/\s+/)
     .map((part) => part[0])
@@ -257,7 +259,11 @@ export function Planner() {
             <p>Workspace</p>
             <button className={section === "help" ? "is-active" : ""} type="button" onClick={() => navigateTo("help")}><CircleHelp size={17} strokeWidth={1.65} aria-hidden="true" /> Help</button>
             <button className={section === "settings" ? "is-active" : ""} type="button" onClick={() => navigateTo("settings")}><Settings size={17} strokeWidth={1.65} aria-hidden="true" /> Settings</button>
-            <button type="button" disabled={isSigningOut} onClick={signOut}><LogOut size={17} strokeWidth={1.65} aria-hidden="true" /> {isSigningOut ? "Signing out…" : "Sign out"}</button>
+            {session?.user ? (
+              <button type="button" disabled={isSigningOut} onClick={signOut}><LogOut size={17} strokeWidth={1.65} aria-hidden="true" /> {isSigningOut ? "Signing out…" : "Sign out"}</button>
+            ) : (
+              <button type="button" onClick={() => router.push("/auth/sign-in")}><LogIn size={17} strokeWidth={1.65} aria-hidden="true" /> Sign in</button>
+            )}
           </div>
           <div className="workspace-person">
             <span>{userInitials || "C"}</span>
@@ -280,7 +286,11 @@ export function Planner() {
           </label>
           <div className="topbar-actions">
             <Link className="icon-button" href="/" aria-label="Back to website"><ArrowLeft size={17} weight="light" aria-hidden="true" /></Link>
-            <button className="icon-button sign-out-trigger" type="button" disabled={isSigningOut} onClick={signOut} aria-label="Sign out"><SignOut size={17} weight="light" aria-hidden="true" /></button>
+            {session?.user ? (
+              <button className="icon-button sign-out-trigger" type="button" disabled={isSigningOut} onClick={signOut} aria-label="Sign out"><SignOut size={17} weight="light" aria-hidden="true" /></button>
+            ) : (
+              <Link className="icon-button sign-out-trigger" href="/auth/sign-in" aria-label="Sign in"><SignIn size={17} weight="light" aria-hidden="true" /></Link>
+            )}
             <button className={`icon-button notification-trigger ${notificationsOpen ? "is-active" : ""}`} type="button" aria-label={`${attentionCount} notifications`} aria-expanded={notificationsOpen} onClick={() => setNotificationsOpen((current) => !current)}><Bell size={17} weight="light" aria-hidden="true" />{attentionCount > 0 && <span>{attentionCount}</span>}</button>
             <button className="primary-button" type="button" onClick={() => createItem()}>
               <Plus size={16} weight="light" aria-hidden="true" /> New content
