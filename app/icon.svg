@@ -1,4 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" fill="#809d83"/>
-  <path d="M27.5 18.5c-8.2 0-13 5.6-13 13.7 0 8.4 4.8 13.8 13 13.8 3.8 0 7-1 9.7-3l-3.4-6.2a9.4 9.4 0 0 1-5.5 1.8c-3.7 0-6-2.4-6-6.5 0-3.9 2.3-6.3 6-6.3 2 0 3.8.6 5.5 1.8l3.4-6.3a16.8 16.8 0 0 0-9.7-2.8ZM43.8 17 34 47h6.2L50 17h-6.2Z" fill="#171916"/>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="256" cy="256" r="256" fill="black"/>
+  <g clip-path="url(#clip0_45_97)">
+    <mask id="mask0_45_97" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512"><circle cx="256" cy="256" r="256" fill="#D9D9D9"/></mask>
+    <g mask="url(#mask0_45_97)"><g filter="url(#filter0_f_45_97)"><rect width="512" height="512" fill="black" fill-opacity="0.01"/><circle cx="256" cy="256" r="256" fill="black"/><circle cx="256" cy="256" r="231" fill="#B30909"/><circle cx="256" cy="256" r="195" fill="#C55400"/><circle cx="256" cy="256" r="160" fill="#D9C680"/><circle cx="256.5" cy="256.5" r="137.5" fill="#E5EBBC"/><circle cx="256.5" cy="256.5" r="87.5" fill="white"/></g></g>
+  </g>
+  <defs><filter id="filter0_f_45_97" x="-10" y="-10" width="532" height="532" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="5" result="effect1_foregroundBlur_45_97"/></filter><clipPath id="clip0_45_97"><rect width="512" height="512" fill="white"/></clipPath></defs>
 </svg>

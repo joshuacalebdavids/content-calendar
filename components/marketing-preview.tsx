@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const previewItems = [
   { day: "11", title: "Two-hour content sprint", tag: "Newsletter" },
   { day: "13", title: "Stop opening with credentials", tag: "LinkedIn" },
@@ -10,7 +12,7 @@ export function MarketingPreview() {
     <div className="preview-frame" data-product-preview aria-hidden="true">
       <div className="marketing-preview">
         <div className="preview-rail">
-          <span className="brand-glyph">C/</span>
+          <Image className="preview-brand-symbol" src="/favicon-vrtks.svg" alt="" width={512} height={512} />
           <span className="preview-rail-dot is-active" />
           <span className="preview-rail-dot" />
           <span className="preview-rail-dot" />

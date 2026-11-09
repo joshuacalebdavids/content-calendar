@@ -30,54 +30,53 @@ export default function HomePage() {
     <MarketingMotion>
       <main className="marketing-shell" id="main-content">
         <header className="marketing-nav">
-          <BrandMark />
+          <div className="marketing-brand-group">
+            <BrandMark />
+            <span className="marketing-location">Johannesburg · working worldwide</span>
+          </div>
           <nav aria-label="Main navigation">
-            <a href="#product"><span>01</span> Product</a>
-            <a href="#workflow"><span>02</span> Workflow</a>
-            <a href="#pricing"><span>03</span> Pricing</a>
+            <a href="#product">product</a><span aria-hidden="true">,</span>
+            <a href="#workflow">workflow</a><span aria-hidden="true">,</span>
+            <a href="#pricing">start</a>
           </nav>
           <div className="nav-actions">
-            <Link className="text-link" href="/demo">Sign in</Link>
-            <Link className="button button-small" href="/demo">Try the demo</Link>
+            <Link className="text-link" href="/auth/sign-in">Sign in</Link>
+            <Link className="text-link" href="/demo">Open demo</Link>
           </div>
         </header>
 
         <section className="hero-section">
           <div className="hero-grid">
-            <div className="hero-index" data-reveal>(Calio v0.1)</div>
             <div className="hero-statement">
-              <p className="hero-kicker" data-reveal>
-                The content workspace for focused creators
-              </p>
               <h1 data-reveal>
-                <span>Your ideas</span>
-                <span>deserve a clearer path.</span>
+                <span>Plan</span>
+                <span>tomorrow&apos;s</span>
+                <span className="hero-final-line">
+                  <span>story</span>
+                  <span className="hero-media-pill" aria-hidden="true"><i /><i /><i /></span>
+                  <span>today.</span>
+                </span>
               </h1>
             </div>
             <div className="hero-aside" data-reveal>
               <p className="hero-copy">
-                Plan the story, shape the brief, and move every piece from first thought
-                to published in one calm workspace.
+                A focused content workspace for teams that want to plan with clarity,
+                shape better ideas, and publish with momentum.
               </p>
               <div className="hero-actions">
-                <Link className="button" href="/demo">
+                <Link className="hero-text-link" href="/demo">
                   Explore the workspace
                   <ArrowRight size={16} weight="light" aria-hidden="true" />
                 </Link>
-                <span>No signup required for the demo</span>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="preview-section" id="product">
-          <MarketingPreview />
-        </section>
-
         <section className="manifesto-section" id="workflow" data-scroll-reveal>
-          <p className="section-label">(Workflow)</p>
+          <p className="section-label">(Approach)</p>
           <div className="manifesto-grid">
-            <h2>Less content chaos.<br />More creative momentum.</h2>
+            <h2>Content planning built for clearer thinking and stronger creative momentum.</h2>
             <p>
               Calio brings the planning room, writing desk, and production board into
               one considered system—so the work stays connected from idea to publish.
@@ -94,12 +93,20 @@ export default function HomePage() {
           </div>
         </section>
 
+        <section className="preview-section" id="product">
+          <div className="preview-section-heading">
+            <span>(Workspace)</span>
+            <h2>One calm view of everything moving.</h2>
+          </div>
+          <MarketingPreview />
+        </section>
+
         <section className="closing-section" id="pricing" data-scroll-reveal>
           <span className="section-label">(Start planning)</span>
           <h2>A real workspace.<br />Ready for real ideas.</h2>
           <p>The refreshed product is taking shape. Step inside the working prototype.</p>
           <Link className="button button-light" href="/demo">
-            Open Calio
+            Open workspace
             <ArrowRight size={16} weight="light" aria-hidden="true" />
           </Link>
         </section>
@@ -107,10 +114,10 @@ export default function HomePage() {
         <footer className="marketing-footer">
           <div className="footer-meta">
             <BrandMark />
-            <p>Designed and built in Cape Town.</p>
-            <p>© 2026 Calio</p>
+            <p>Designed and built in Johannesburg.</p>
+            <p>© 2026 Vorteks Digital</p>
           </div>
-          <div className="footer-wordmark" aria-hidden="true">calio</div>
+          <div className="footer-wordmark" aria-hidden="true">VRTKS</div>
         </footer>
       </main>
     </MarketingMotion>

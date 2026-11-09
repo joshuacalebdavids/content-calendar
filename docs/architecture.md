@@ -2,21 +2,20 @@
 
 ## Product boundary
 
-Calio separates the public website, interactive demo, authenticated product, persistence, and billing concerns. The current release implements the first two and defines the database contract for the authenticated product.
+Calio separates the public website, authenticated interactive workspace, persistence, and billing concerns. The current release implements public marketing, Neon-managed identity, protected workspace access, and local content persistence.
 
 ```text
 Next.js application
 ├── Public marketing site
-├── Local interactive demo
-├── Authenticated workspace (next milestone)
+├── Neon Auth proxy and session middleware
+├── Authenticated interactive workspace
 └── Server-side data access layer (next milestone)
         │
         ▼
-Supabase
-├── Authentication
-├── PostgreSQL
-├── Row Level Security
-└── Storage
+Neon
+├── Managed Better Auth
+├── Lakebase Postgres
+└── Branch-first infrastructure configuration
 ```
 
 Billing is not coupled to the workspace model. A later provider integration will translate verified webhook events into internal plan entitlements without making product components depend on Paystack, Lemon Squeezy, Paddle, or Stripe-specific objects.
@@ -31,7 +30,7 @@ Billing is not coupled to the workspace model. A later provider integration will
 
 ## Authorization
 
-Every workspace table has Row Level Security enabled. Membership checks are centralized in security-definer functions so policies remain consistent and avoid recursive membership queries.
+The `/demo` route is protected by Neon Auth middleware and restores the signed-in session from secure cookies. Future workspace tables must enforce membership within the server-side data layer for every read and mutation.
 
 Client-side visibility is never treated as authorization. The authenticated application must perform a secure workspace membership check for every mutation, even when invoked through a Server Action.
 
@@ -41,9 +40,9 @@ The demo stores `ContentItem[]` under the `calio-demo-content-v2` local-storage 
 
 ## Next milestones
 
-1. Provision Supabase and apply the initial migration.
-2. Implement email and OAuth authentication.
-3. Add a server-only data-access layer and workspace selection.
-4. Replace demo persistence with optimistic cloud mutations.
-5. Add invitations and realtime collaboration.
+1. Add a server-only Lakebase Postgres data-access layer and workspace selection.
+2. Replace local demo persistence with authorized cloud mutations.
+3. Adapt the legacy schema draft in `supabase/migrations` for Neon-managed user IDs.
+4. Add invitations and realtime collaboration.
+5. Configure custom SMTP and production trusted domains before launch.
 6. Select and integrate the South African-compatible billing provider.

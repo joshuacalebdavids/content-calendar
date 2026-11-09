@@ -2,22 +2,27 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   Bell,
   CalendarDots,
   CaretLeft,
   CaretRight,
-  ChartBar,
-  FileText,
-  Gear,
   GridFour,
   MagnifyingGlass,
   Plus,
-  Question,
   Sparkle,
-  SquaresFour,
+  SignOut,
 } from "@phosphor-icons/react";
+import {
+  CircleHelp,
+  FileText,
+  LayoutDashboard,
+  LogOut,
+  Settings,
+  TrendingUp,
+} from "lucide-react";
 import { BrandMark } from "@/components/brand-mark";
 import { ContentEditor } from "./content-editor";
 import {
@@ -32,6 +37,7 @@ import {
 import { DEMO_CONTENT, DEMO_WORKSPACE } from "@/lib/demo-data";
 import { formatMonth, getCalendarDays, shiftMonth } from "@/lib/calendar";
 import { CONTENT_STATUSES, type ContentItem, type ContentStatus } from "@/lib/types";
+import { authClient } from "@/lib/auth/client";
 
 const STORAGE_KEY = "calio-demo-content-v2";
 const PREFERENCES_KEY = "calio-demo-preferences-v1";
@@ -73,6 +79,8 @@ function newContentItem(date = "2026-08-11"): ContentItem {
 }
 
 export function Planner() {
+  const router = useRouter();
+  const { data: session } = authClient.useSession();
   const [items, setItems] = useState<ContentItem[]>(DEMO_CONTENT);
   const [section, setSection] = useState<AppSection>("plan");
   const [view, setView] = useState<View>("calendar");
@@ -84,7 +92,24 @@ export function Planner() {
   const [workspaceName, setWorkspaceName] = useState(DEMO_WORKSPACE.name);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
+
+  const userName = session?.user.name || "Calio member";
+  const userEmail = session?.user.email || "Secure workspace";
+  const userInitials = userName
+    .split(/\s+/)
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  const signOut = async () => {
+    setIsSigningOut(true);
+    await authClient.signOut();
+    router.replace("/");
+    router.refresh();
+  };
 
   useEffect(() => {
     let initialItems = DEMO_CONTENT;
@@ -213,18 +238,30 @@ export function Planner() {
   return (
     <div className="app-shell">
       <aside className="app-sidebar">
-        <BrandMark />
+        <div className="sidebar-brand-row">
+          <div className="sidebar-brand-lockup">
+            <BrandMark />
+            <span>Content Calendar</span>
+          </div>
+        </div>
         <nav aria-label="Workspace navigation">
-          <button className={section === "plan" ? "is-active" : ""} type="button" onClick={() => navigateTo("plan")}><SquaresFour size={18} weight="light" aria-hidden="true" /> Plan</button>
-          <button className={section === "library" ? "is-active" : ""} type="button" onClick={() => navigateTo("library")}><FileText size={18} weight="light" aria-hidden="true" /> Library</button>
-          <button className={section === "insights" ? "is-active" : ""} type="button" onClick={() => navigateTo("insights")}><ChartBar size={18} weight="light" aria-hidden="true" /> Insights</button>
+          <div className="sidebar-nav-group">
+            <p>Main</p>
+            <button className={section === "plan" ? "is-active" : ""} type="button" onClick={() => navigateTo("plan")}><LayoutDashboard size={17} strokeWidth={1.65} aria-hidden="true" /> Dashboard</button>
+            <button className={section === "library" ? "is-active" : ""} type="button" onClick={() => navigateTo("library")}><FileText size={17} strokeWidth={1.65} aria-hidden="true" /> Library</button>
+            <button className={section === "insights" ? "is-active" : ""} type="button" onClick={() => navigateTo("insights")}><TrendingUp size={17} strokeWidth={1.65} aria-hidden="true" /> Analytics</button>
+          </div>
         </nav>
         <div className="sidebar-bottom">
-          <button className={section === "help" ? "is-active" : ""} type="button" onClick={() => navigateTo("help")}><Question size={18} weight="light" aria-hidden="true" /> Help</button>
-          <button className={section === "settings" ? "is-active" : ""} type="button" onClick={() => navigateTo("settings")}><Gear size={18} weight="light" aria-hidden="true" /> Settings</button>
+          <div className="sidebar-nav-group">
+            <p>Workspace</p>
+            <button className={section === "help" ? "is-active" : ""} type="button" onClick={() => navigateTo("help")}><CircleHelp size={17} strokeWidth={1.65} aria-hidden="true" /> Help</button>
+            <button className={section === "settings" ? "is-active" : ""} type="button" onClick={() => navigateTo("settings")}><Settings size={17} strokeWidth={1.65} aria-hidden="true" /> Settings</button>
+            <button type="button" disabled={isSigningOut} onClick={signOut}><LogOut size={17} strokeWidth={1.65} aria-hidden="true" /> {isSigningOut ? "Signing out…" : "Sign out"}</button>
+          </div>
           <div className="workspace-person">
-            <span>JC</span>
-            <div><strong>Joshua</strong><small>Demo workspace</small></div>
+            <span>{userInitials || "C"}</span>
+            <div><strong>{userName}</strong><small>{userEmail}</small></div>
           </div>
         </div>
       </aside>
@@ -243,6 +280,7 @@ export function Planner() {
           </label>
           <div className="topbar-actions">
             <Link className="icon-button" href="/" aria-label="Back to website"><ArrowLeft size={17} weight="light" aria-hidden="true" /></Link>
+            <button className="icon-button sign-out-trigger" type="button" disabled={isSigningOut} onClick={signOut} aria-label="Sign out"><SignOut size={17} weight="light" aria-hidden="true" /></button>
             <button className={`icon-button notification-trigger ${notificationsOpen ? "is-active" : ""}`} type="button" aria-label={`${attentionCount} notifications`} aria-expanded={notificationsOpen} onClick={() => setNotificationsOpen((current) => !current)}><Bell size={17} weight="light" aria-hidden="true" />{attentionCount > 0 && <span>{attentionCount}</span>}</button>
             <button className="primary-button" type="button" onClick={() => createItem()}>
               <Plus size={16} weight="light" aria-hidden="true" /> New content
@@ -329,11 +367,11 @@ export function Planner() {
       )}
 
       <nav className="mobile-app-nav" aria-label="Mobile workspace navigation">
-        <button className={section === "plan" ? "is-active" : ""} type="button" onClick={() => navigateTo("plan")}><SquaresFour size={18} weight="light" aria-hidden="true" /><span>Plan</span></button>
-        <button className={section === "library" ? "is-active" : ""} type="button" onClick={() => navigateTo("library")}><FileText size={18} weight="light" aria-hidden="true" /><span>Library</span></button>
-        <button className={section === "insights" ? "is-active" : ""} type="button" onClick={() => navigateTo("insights")}><ChartBar size={18} weight="light" aria-hidden="true" /><span>Insights</span></button>
-        <button className={section === "help" ? "is-active" : ""} type="button" onClick={() => navigateTo("help")}><Question size={18} weight="light" aria-hidden="true" /><span>Help</span></button>
-        <button className={section === "settings" ? "is-active" : ""} type="button" onClick={() => navigateTo("settings")}><Gear size={18} weight="light" aria-hidden="true" /><span>Settings</span></button>
+        <button className={section === "plan" ? "is-active" : ""} type="button" onClick={() => navigateTo("plan")}><LayoutDashboard size={18} strokeWidth={1.65} aria-hidden="true" /><span>Dashboard</span></button>
+        <button className={section === "library" ? "is-active" : ""} type="button" onClick={() => navigateTo("library")}><FileText size={18} strokeWidth={1.65} aria-hidden="true" /><span>Library</span></button>
+        <button className={section === "insights" ? "is-active" : ""} type="button" onClick={() => navigateTo("insights")}><TrendingUp size={18} strokeWidth={1.65} aria-hidden="true" /><span>Analytics</span></button>
+        <button className={section === "help" ? "is-active" : ""} type="button" onClick={() => navigateTo("help")}><CircleHelp size={18} strokeWidth={1.65} aria-hidden="true" /><span>Help</span></button>
+        <button className={section === "settings" ? "is-active" : ""} type="button" onClick={() => navigateTo("settings")}><Settings size={18} strokeWidth={1.65} aria-hidden="true" /><span>Settings</span></button>
       </nav>
     </div>
   );
