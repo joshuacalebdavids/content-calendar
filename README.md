@@ -15,7 +15,7 @@ The original Vite prototype proved the workflow, but stored the entire applicati
 - Working library, live workspace insights, notifications, help, and settings
 - Structured content briefs and platform selection
 - Search, filtering, metrics, and local demo persistence
-- Neon Auth sign-up, sign-in, protected workspace access, and sign-out
+- Neon Auth sign-up, sign-in, optional workspace identity, and sign-out
 - Responsive layouts and reduced-motion support
 - A multi-tenant Postgres schema with Row Level Security
 - Automated tests for calendar behavior
@@ -24,7 +24,7 @@ Billing is deliberately deferred until the South African payment-provider decisi
 
 ## Product demo
 
-The authenticated `/demo` workspace is fully interactive and saves content changes to local storage. Identity and sessions are managed by Neon Auth; moving workspace content into Lakebase Postgres is the next persistence layer.
+The public `/demo` workspace is fully interactive and saves content changes to local storage. Signing in with Neon Auth is optional; moving account workspaces into Lakebase Postgres is the next persistence layer.
 
 ## Getting started
 

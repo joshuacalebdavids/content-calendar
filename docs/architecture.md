@@ -2,13 +2,13 @@
 
 ## Product boundary
 
-Calio separates the public website, authenticated interactive workspace, persistence, and billing concerns. The current release implements public marketing, Neon-managed identity, protected workspace access, and local content persistence.
+Calio separates the public website, interactive demo workspace, optional identity, persistence, and billing concerns. The current release implements public marketing, Neon-managed identity, public demo access, and local content persistence.
 
 ```text
 Next.js application
 ├── Public marketing site
-├── Neon Auth proxy and session middleware
-├── Authenticated interactive workspace
+├── Neon Auth account routes and sessions
+├── Public interactive demo workspace
 └── Server-side data access layer (next milestone)
         │
         ▼
@@ -30,7 +30,7 @@ Billing is not coupled to the workspace model. A later provider integration will
 
 ## Authorization
 
-The `/demo` route is protected by Neon Auth middleware and restores the signed-in session from secure cookies. Future workspace tables must enforce membership within the server-side data layer for every read and mutation.
+The `/demo` route is public and stores its data locally in the visitor's browser. Signed-in identity is optional there. Future account-backed workspace routes must enforce membership within the server-side data layer for every read and mutation.
 
 Client-side visibility is never treated as authorization. The authenticated application must perform a secure workspace membership check for every mutation, even when invoked through a Server Action.
 
