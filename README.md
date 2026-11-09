@@ -15,6 +15,7 @@ The original Vite prototype proved the workflow, but stored the entire applicati
 - Working library, live workspace insights, notifications, help, and settings
 - Structured content briefs and platform selection
 - Search, filtering, metrics, and local demo persistence
+- Neon Auth sign-up, sign-in, protected workspace access, and sign-out
 - Responsive layouts and reduced-motion support
 - A multi-tenant Postgres schema with Row Level Security
 - Automated tests for calendar behavior
@@ -23,7 +24,7 @@ Billing is deliberately deferred until the South African payment-provider decisi
 
 ## Product demo
 
-The `/demo` workspace is fully interactive and saves changes to local storage. It is intentionally separate from the future authenticated cloud workspace, which will use the schema in `supabase/migrations`.
+The authenticated `/demo` workspace is fully interactive and saves content changes to local storage. Identity and sessions are managed by Neon Auth; moving workspace content into Lakebase Postgres is the next persistence layer.
 
 ## Getting started
 
@@ -50,7 +51,8 @@ npm run build
 - Next.js App Router
 - React and TypeScript
 - GSAP for considered marketing motion
-- Supabase-ready PostgreSQL and Row Level Security
+- Neon Auth with Managed Better Auth
+- Lakebase Postgres project and branch configuration through `neon.ts`
 - Vercel Analytics and deployment
 - Vitest
 
@@ -60,7 +62,14 @@ See [docs/architecture.md](docs/architecture.md) for the domain model, security 
 
 ## Environment
 
-Copy `.env.example` to `.env.local` when a Supabase project is provisioned. The current demo does not require environment variables.
+Link the repository to its Neon project and pull the branch environment, then add a 32+ character cookie secret:
+
+```bash
+neon link --project-id <project-id> -y
+neon env pull
+```
+
+See `.env.example` for the required Auth variables. The local `.env.local` file is git-ignored.
 
 ## License
 

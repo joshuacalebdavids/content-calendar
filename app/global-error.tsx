@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { useEffect } from "react";
 
 export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
@@ -11,7 +13,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
     <html lang="en">
       <body>
         <main className="system-page">
-          <header><span className="brand-mark"><span className="brand-glyph">C/</span><span>calio</span></span><span>Error</span></header>
+          <header><span className="brand-mark"><Image className="brand-logo" src="/logo-vrtks.svg" alt="Vorteks" width={500} height={65} /></span><span>Error</span></header>
           <div className="system-page-copy">
             <p className="section-label">Something went wrong</p>
             <h1>The workspace<br />lost its place.</h1>
