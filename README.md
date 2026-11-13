@@ -1,12 +1,12 @@
-# Calio
+# Content Calendar
 
-Calio is a content operating system for focused creators and small teams. It brings planning, briefs, scheduling, and production status into one calm workspace.
+Content Calendar is a VRTKS content operating system for focused creators and small teams. It brings planning, briefs, scheduling, and production status into one clear command centre.
 
-> This repository contains Calio v0.1: a portfolio-grade Next.js rebuild of the original browser-based planner.
+> This repository contains the current VRTKS Content Calendar: a portfolio-grade Next.js rebuild of the original browser-based planner.
 
 ## What changed
 
-The original Vite prototype proved the workflow, but stored the entire application in one large component and modeled a year as 48 generic work weeks. Calio v0.1 introduces:
+The original Vite prototype proved the workflow, but stored the entire application in one large component and modeled a year as 48 generic work weeks. Content Calendar introduces:
 
 - A Next.js App Router and TypeScript architecture
 - A dedicated marketing experience and interactive product demo
