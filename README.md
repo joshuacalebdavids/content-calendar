@@ -71,6 +71,8 @@ neon env pull
 
 See `.env.example` for the required Auth variables. The local `.env.local` file is git-ignored.
 
+Before deploying to Vercel, add `NEON_AUTH_BASE_URL` and `NEON_AUTH_COOKIE_SECRET` to the Production, Preview, and Development environments. The server validates both values at startup so a missing deployment setting fails with the exact variable name.
+
 ## License
 
 MIT
